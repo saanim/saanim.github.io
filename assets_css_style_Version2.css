@@ -1,0 +1,111 @@
+:root{
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --text: #0f1720;
+  --muted: #6b7280;
+  --accent: #6f8cff;
+  --glass: rgba(15,23,32,0.04);
+  --radius: 12px;
+  --transition: 240ms cubic-bezier(.2,.9,.3,1);
+  --max-width: 1100px;
+}
+
+/* Dark theme variables */
+:root[data-theme="dark"]{
+  --bg: #071024;
+  --surface: #062035;
+  --text: #e6eef8;
+  --muted: #9aa8bf;
+  --accent: #6f8cff;
+  --glass: rgba(255,255,255,0.03);
+}
+
+/* Respect OS preference initially (unless overridden by data-theme) */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme]){
+    --bg: #071024;
+    --surface: #062035;
+    --text: #e6eef8;
+    --muted: #9aa8bf;
+    --glass: rgba(255,255,255,0.03);
+  }
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.5;
+  transition: background var(--transition), color var(--transition);
+  cursor: auto; /* default for accessibility on touch */
+}
+
+/* Layout */
+.container{max-width:var(--max-width);margin:0 auto;padding:1.25rem}
+.header-inner{display:flex;align-items:center;gap:1rem;justify-content:space-between}
+.site-header{backdrop-filter: blur(6px);background:linear-gradient(180deg, transparent, rgba(0,0,0,0.02));position:sticky;top:0;z-index:40}
+.brand{font-weight:700;text-decoration:none;color:var(--text);font-size:1.05rem}
+.nav a{margin-left:1rem;text-decoration:none;color:var(--muted);transition:color var(--transition)}
+.nav a:hover{color:var(--text)}
+.controls button{background:transparent;border:0;font-size:1.05rem;cursor:pointer;color:var(--muted)}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1fr;gap:1.25rem;align-items:center;padding-top:2.25rem;padding-bottom:3rem}
+.hero-inner h1{font-size:clamp(1.6rem, 4vw, 2.8rem);margin:0}
+.lead{color:var(--muted);margin-top:0.5rem}
+.hero-image img{width:100%;height:auto;border-radius:var(--radius);box-shadow:0 8px 30px rgba(0,0,0,0.08)}
+
+/* Buttons */
+.btn{display:inline-block;padding:0.6rem 1rem;border-radius:10px;background:var(--accent);color:white;text-decoration:none;transition:transform var(--transition), box-shadow var(--transition)}
+.btn:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,0.12)}
+.btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--text)}
+
+/* Work grid */
+.work h2{margin-top:0}
+.grid{display:grid;grid-template-columns:1fr;gap:1rem}
+.card{background:var(--surface);border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(2,6,23,0.06);transition:transform var(--transition), box-shadow var(--transition);cursor:pointer}
+.card img{width:100%;height:auto;display:block}
+.card-body{padding:1rem}
+.card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(2,6,23,0.1)}
+.link{color:var(--accent);text-decoration:none;font-weight:600}
+
+/* Footer */
+.site-footer{padding:2rem 0;color:var(--muted);text-align:center}
+
+/* Responsive layout */
+@media(min-width:900px){
+  .hero{grid-template-columns:1fr 520px}
+  .grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* Hover accent effect: we change --accent via JS on hover for elements that define data-accent */
+/* Keep transitions */
+.card, .btn, .link, .nav a { transition: color var(--transition), background var(--transition), box-shadow var(--transition), transform var(--transition); }
+
+/* Cursor styles (disabled on touch devices or if the user prefers no hover) */
+@media (hover: hover) and (pointer: fine) {
+  body.hide-default-cursor { cursor: none; }
+  .cursor{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:normal;transition:transform 120ms linear}
+  .cursor-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;transform:translate(-50%,-50%) translateZ(0);box-shadow:0 4px 18px rgba(0,0,0,0.18)}
+  .cursor-ring{width:36px;height:36px;border:2px solid var(--accent);border-radius:50%;transform:translate(-50%,-50%);opacity:0.9}
+  /* Hover state */
+  .cursor-hover .cursor-dot{transform:scale(1.8) translate(-50%,-50%);background:var(--accent)}
+  .cursor-hover .cursor-ring{transform:scale(1.2) translate(-50%,-50%);border-color:var(--accent);opacity:0.95}
+}
+
+/* Accessibility: if reduced-motion, tone down effects */
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important}
+}
+
+/* Small tweaks for small screens */
+@media (max-width:640px){
+  .header-inner{padding:0.5rem 0}
+  .nav{display:none}
+  .hero{padding-bottom:1.5rem}
+}
